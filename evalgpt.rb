@@ -70,19 +70,22 @@ class EvalGPT
       file.write(code)
     end
     puts "Code written to #{filename}"
-    "output/#{filename}"
+    "#{Dir.pwd}/output/#{filename}"
   end
 
   def execute_code(code, language)
     location = write_code(code, language)
+    puts location
     case language
     when 'ruby'
       eval(code)
     when 'javascript'
       line = Terrapin::CommandLine.new("node", location)
+      puts line.command
       line.run
     when 'python', 'swift'
-      line = Terrapin::CommandLine.new(language, code)
+      line = Terrapin::CommandLine.new(language, location)
+      puts line.command
       line.run
     else
       raise "Unsupported language: #{language}"
