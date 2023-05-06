@@ -2,6 +2,7 @@ require 'rest-client'
 require 'json'
 require 'colorize'
 require 'optparse'
+require 'tty-spinner'
 
 class EvalGPT
   API_URL = 'https://api.openai.com/v1/chat/completions'
@@ -19,6 +20,7 @@ class EvalGPT
         'content' => 'You are a senior engineering assistant.'
       }
     ]
+    @spinner = TTY::Spinner.new("[:spinner] Waiting for API response ...", format: :pulse_2)
     @model = select_model
   end
 
@@ -32,19 +34,20 @@ class EvalGPT
         'role' => 'user',
         'content' => user_message
       }
-  
+      @spinner.auto_spin
       response = call_chatgpt
-      puts response.colorize(:gray) if @verbose
+      @spinner.stop('')
+      puts response&.colorize(:gray) if @verbose
       code_response = extract_code(response)
       if code_response
         puts ""
-        puts code_response.colorize(:green)
+        puts code_response&.colorize(:green)
         puts ""
         print "Do you want to evaluate this code? (yes/no): ".colorize(:white)
         if gets.chomp.downcase == 'yes'
           begin
             eval_result = eval(code_response)
-            puts "#{eval_result}".colorize(:yellow)
+            puts "#{eval_result}"&.colorize(:yellow)
           rescue Exception => e
             puts "An error occurred while evaluating the code: #{e}".colorize(:red)
           end
@@ -55,6 +58,12 @@ class EvalGPT
 
   private
 
+  def print_two_columns(items)
+    items.each_slice(2).with_index(1) do |(item1, item2), index|
+      puts "#{items.index(item1)}.#{item1}\t\t\t\t\t\t#{items.index(item2)}.#{item2}"
+    end
+  end
+  
   def clear_screen
     puts "\e[H\e[2J"
   end
@@ -89,7 +98,7 @@ class EvalGPT
 
   def call_chatgpt
     data = {
-      'max_tokens' => 150,
+      'max_tokens' => ENV['MAX_TOKENS']&.to_i,
       'temperature' => 0.7,
       'model' => @model,
       'messages' => @messages

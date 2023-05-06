@@ -24,6 +24,8 @@ source .env
 
 * When a ruby code response is detected you'll be prompted if you want to evaluate it
 
+* If your responses are being cut off, you can increase the `max_tokens` in the `.env` file
+
 ### Example
 
 ![Example](https://github.com/philipbroadway/evalgpt/blob/main/example.png)
