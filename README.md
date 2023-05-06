@@ -2,6 +2,18 @@
 
 > A simple command line tool that connects to openai and can evaluate ruby/javascript/python/swift code responses
 
+## Language Support
+
+* Languages in the table have varying support for writing & running code generated from prompts.
+* Note that the language support depends on the language being installed locally and in the users `$PATH`
+
+| Language  | Writes Generated Code | Execute Generated Code |
+|---| --- | --- |
+| Ruby  | ✅ |  ✅ |
+| Javascript  |  ✅ | ❌|
+| Python  |  ✅ | ❌|
+| Swift  | ✅ |  ✅ |
+
 ## Installation
 
 ```
@@ -27,16 +39,6 @@ source .env
 * When a ruby code response is detected you'll be prompted if you want to evaluate it
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file
-
-* Ruby language is supported if language is installed locally
-
-* Javascript language is supported if node is installed locally [experimental]
-
-* Swift language is supported if swift is installed locally 
-
-* Python language is supported if python is installed locally [experimental]
-
-* Experimental languages are not fully supported and most likely will not run the generated code, the code will be saved in output folder for manual execution and you can use ctrl-c to exit running the program and return to prompt
 
 ### Example
 
