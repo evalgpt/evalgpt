@@ -7,7 +7,7 @@
 * Languages in the table have varying support for writing & running code generated from prompts.
 * Note that the language support depends on the language being installed locally and in the users `$PATH`
 
-| Language  | Writes Generated Code | Execute Generated Code |
+| Language  | Write Generated Code | Execute Generated Code |
 |---| --- | --- |
 | Ruby  | ✅ |  ✅ |
 | Javascript  |  ✅ | ❌|
