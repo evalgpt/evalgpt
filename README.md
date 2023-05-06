@@ -1,6 +1,6 @@
 # evalgpt
 
-> Ruby OpenAI client capable of evalutating ruby code generated from prompt responses
+> Ruby OpenAI client with support for executing code generated from prompts
 
 ## Language Support
 
