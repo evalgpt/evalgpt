@@ -8,8 +8,8 @@ require 'pty'
 
 class EvalGPT
   
-  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift']
-  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift']
+  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift', 'bash']
+  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose)
@@ -82,7 +82,7 @@ class EvalGPT
     case language
     when 'ruby'
       eval(code)
-    when 'python', 'swift', 'javascript'
+    when 'python', 'swift', 'javascript', 'bash'
 
       PTY.spawn("#{language == 'javascript' ? 'node' : language}", location) do |stdout, stdin, pid|
       begin
