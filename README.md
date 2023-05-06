@@ -40,6 +40,8 @@ source .env
 
 * You'll be prompted to select a model by number (gpt variants work best)
 
+* Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date`, `Write a swift program that asks for 2 numbers and returns gcd`)
+
 * Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
 
 * When a ruby code response is detected you'll be prompted if you want to evaluate it
