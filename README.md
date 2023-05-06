@@ -10,9 +10,15 @@
 | Language  | Write Generated Code | Execute Generated Code |
 |---| --- | --- |
 | Ruby  | ✅ |  ✅ |
+| Swift  | ✅ |  ✅ |
 | Javascript  |  ✅ | ❌|
 | Python  |  ✅ | ❌|
-| Swift  | ✅ |  ✅ |
+| Bash  | ✅ |  ✅ |
+| Go  | ❓|  ❓ |
+| Rust  | ❓ | ❓ |
+| C  | ❓ | ❓ |
+| C++  | ❓ | ❓ |
+| Java  | ❓ | ❓ |
 
 ## Installation
 
