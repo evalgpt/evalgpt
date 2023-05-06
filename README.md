@@ -11,9 +11,9 @@
 |---| --- | --- |
 | Ruby  | ✅ |  ✅ |
 | Swift  | ✅ |  ✅ |
+| Bash  | ✅ |  ✅ |
 | Javascript  |  ✅ | ❌|
 | Python  |  ✅ | ❌|
-| Bash  | ✅ |  ✅ |
 | Go  | ❓|  ❓ |
 | Rust  | ❓ | ❓ |
 | C  | ❓ | ❓ |
