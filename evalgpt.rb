@@ -4,6 +4,7 @@ require 'colorize'
 require 'optparse'
 require 'tty-spinner'
 require 'terrapin'
+require 'pty'
 
 class EvalGPT
   
@@ -75,18 +76,36 @@ class EvalGPT
 
   def execute_code(code, language)
     location = write_code(code, language)
-    puts location
+    lang = Terrapin::CommandLine.new("which", language == 'javascript' ? 'node' : language)
+    lang = lang.run
+    puts "File saved to: #{location}"
     case language
     when 'ruby'
       eval(code)
-    when 'javascript'
-      line = Terrapin::CommandLine.new("node", location)
-      puts line.command
-      line.run
-    when 'python', 'swift'
-      line = Terrapin::CommandLine.new(language, location)
-      puts line.command
-      line.run
+    when 'python', 'swift', 'javascript'
+
+      PTY.spawn("#{language == 'javascript' ? 'node' : language}", location) do |stdout, stdin, pid|
+      begin
+        # Create a separate thread to handle user input
+        input_thread = Thread.new do
+          begin
+            while line = $stdin.gets
+              stdin.puts(line)
+            end
+          rescue Errno::EIO
+            # End of input reached
+          end
+        end
+    
+        # Print output from the script
+        stdout.each { |line| print line }
+    
+        # Wait for the input thread to finish before exiting the PTY block
+        input_thread.join
+      rescue Errno::EIO
+        # End of input reached
+      end
+    end
     else
       raise "Unsupported language: #{language}"
     end

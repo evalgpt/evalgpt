@@ -32,9 +32,11 @@ source .env
 
 * Javascript language is supported if node is installed locally [experimental]
 
-* Swift language is supported if swift is installed locally [experimental]
+* Swift language is supported if swift is installed locally 
 
 * Python language is supported if python is installed locally [experimental]
+
+* Experimental languages are not fully supported and most likely will not run the generated code, the code will be saved in output folder for manual execution and you can use ctrl-c to exit running the program and return to prompt
 
 ### Example
 
