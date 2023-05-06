@@ -1,6 +1,6 @@
 # evalgpt
 
-> A simple command line tool that connects to openai and can evaluate ruby/javascript/python/swift code responses
+> Ruby OpenAI client capable of evalutating ruby code generated from prompt responses
 
 ## Language Support
 
