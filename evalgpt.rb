@@ -1,12 +1,14 @@
 require 'rest-client'
 require 'json'
 require 'colorize'
+require 'optparse'
 
 class EvalGPT
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
-  def initialize(api_key)
+  def initialize(api_key, verbose)
     @api_key = api_key
+    @verbose = verbose
     @headers = {
       'Content-Type' => 'application/json',
       'Authorization' => "Bearer #{@api_key}"
@@ -25,13 +27,14 @@ class EvalGPT
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
       break if user_message.downcase == 'exit'
-    
+  
       @messages << {
         'role' => 'user',
         'content' => user_message
       }
-    
+  
       response = call_chatgpt
+      puts response.colorize(:gray) if @verbose
       code_response = extract_code(response)
       if code_response
         puts ""
@@ -49,7 +52,7 @@ class EvalGPT
       end
     end
   end
-  
+
   private
 
   def clear_screen
@@ -102,4 +105,13 @@ class EvalGPT
   end
 end
 
-EvalGPT.new(ENV['GPT_API_KEY']).chat
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
+    options[:verbose] = v
+  end
+end.parse!
+
+EvalGPT.new(ENV['GPT_API_KEY'], options[:verbose]).chat
