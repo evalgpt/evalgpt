@@ -6,11 +6,15 @@
 
 ```
 bundle install
+
+cp .env.example .env
+# Add your openai api key to the .env file
 ```
 
 ## Usage
 
 ```
+source .env
 ./evalgpt.rb
 ```
 
