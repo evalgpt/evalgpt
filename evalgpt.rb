@@ -3,8 +3,12 @@ require 'json'
 require 'colorize'
 require 'optparse'
 require 'tty-spinner'
+require 'terrapin'
 
 class EvalGPT
+  
+  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift']
+  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose)
@@ -29,7 +33,7 @@ class EvalGPT
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
       break if user_message.downcase == 'exit'
-  
+      language = detect_language(user_message)
       @messages << {
         'role' => 'user',
         'content' => user_message
@@ -46,7 +50,8 @@ class EvalGPT
         print "Do you want to evaluate this code? (yes/no): ".colorize(:white)
         if gets.chomp.downcase == 'yes'
           begin
-            eval_result = eval(code_response)
+            # eval_result = eval(code_response)
+            eval_result = execute_code(code_response, language)
             puts "#{eval_result}"&.colorize(:yellow)
           rescue Exception => e
             puts "An error occurred while evaluating the code: #{e}".colorize(:red)
@@ -56,7 +61,39 @@ class EvalGPT
     end
   end
 
+  def write_code(code, language)
+    timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
+    ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
+    filename = "#{language}_#{timestamp}.#{ext}"
+
+    File.open( "output/#{filename}", "w") do |file|
+      file.write(code)
+    end
+    puts "Code written to #{filename}"
+    "output/#{filename}"
+  end
+
+  def execute_code(code, language)
+    location = write_code(code, language)
+    case language
+    when 'ruby'
+      eval(code)
+    when 'javascript'
+      line = Terrapin::CommandLine.new("node", location)
+      line.run
+    when 'python', 'swift'
+      line = Terrapin::CommandLine.new(language, code)
+      line.run
+    else
+      raise "Unsupported language: #{language}"
+    end
+  end
+
   private
+
+  def detect_language(message)
+    SUPPORTED_LANGUAGES.find { |lang| message.downcase.include?(lang) }
+  end
 
   def print_two_columns(items)
     items.each_slice(2).with_index(1) do |(item1, item2), index|
@@ -75,6 +112,7 @@ class EvalGPT
   def select_model
     models = get_models
     puts "Available models:".colorize(:white)
+    puts models
     models.each_with_index do |model, index|
       puts "#{index + 1}. #{model}".colorize(:green)
     end

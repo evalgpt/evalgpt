@@ -1,6 +1,6 @@
 # evalgpt
 
-> A simple command line tool that connects to openai and can evaluate ruby code responses
+> A simple command line tool that connects to openai and can evaluate ruby/javascript/python/swift code responses
 
 ## Installation
 
@@ -25,6 +25,14 @@ source .env
 * When a ruby code response is detected you'll be prompted if you want to evaluate it
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file
+
+* Ruby language is supported if language is installed locally
+
+* Javascript language is supported if node is installed locally [experimental]
+
+* Swift language is supported if swift is installed locally [experimental]
+
+* Python language is supported if python is installed locally [experimental]
 
 ### Example
 
