@@ -7,8 +7,10 @@
 ```
 bundle install
 
-cp .env.example .env
-# Add your openai api key to the .env file
+mkdir output
+
+cp .env.example .env # Add your openai api key to the .env file
+
 ```
 
 ## Usage
