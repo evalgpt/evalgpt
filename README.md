@@ -14,11 +14,11 @@ bundle install
 ./evalgpt.rb
 ```
 
-You'll be prompted to select a model by number
+* You'll be prompted to select a model by number (gpt variants work best)
 
-Only code responses are displayed by default. To see the prompt and response, pass the `--verbose` flag
+* Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
 
-When a ruby code response is detected you'll be prompted if you want to evaluate it
+* When a ruby code response is detected you'll be prompted if you want to evaluate it
 
 ### Example
 
