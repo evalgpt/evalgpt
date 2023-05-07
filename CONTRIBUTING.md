@@ -1,6 +1,6 @@
-# Contributing to README Template
+# Contributing to EvalGPT
 
-We would love for you to contribute to README Template and help make it even better than it is today! As a contributor, here are the guidelines we would like you to follow:
+We would love for you to contribute to EvalGPT and help make it even better than it is today! As a contributor, here are the guidelines we would like you to follow:
 
 - [Getting Started](#getting-started)
 - [Code of Conduct](#code-of-conduct)
@@ -20,11 +20,11 @@ Start by **starring** the repo or [forking](https://github.com/evalgpt/evalgpt/f
 
 ## Code of Conduct
 
-Help us keep README Template open and inclusive. Please read and follow our [Code of Conduct](https://github.com/evalgpt/evalgpt/blob/main/CODE_OF_CONDUCT.md).
+Help us keep EvalGPT open and inclusive. Please read and follow our [Code of Conduct](https://github.com/evalgpt/evalgpt/blob/main/CODE_OF_CONDUCT.md).
 
 ## Coding Rules
 
-Help us make ***README Template*** one of the best available on the open source community. Make sure you follow all the coding rules and guidelines provided in the [Coding Guidelines Documentation](https://github.com/evalgpt/evalgpt/blob/main/CODING_GUIDELINES.md)
+Help us make ***EvalGPT*** one of the best available on the open source community. Make sure you follow all the coding rules and guidelines provided in the [Coding Guidelines Documentation](https://github.com/evalgpt/evalgpt/blob/main/CODING_GUIDELINES.md)
 
 ## Issues
 
