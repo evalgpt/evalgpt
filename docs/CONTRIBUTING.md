@@ -20,11 +20,11 @@ Start by **starring** the repo or [forking](https://github.com/evalgpt/evalgpt/f
 
 ## Code of Conduct
 
-Help us keep EvalGPT open and inclusive. Please read and follow our [Code of Conduct](https://github.com/evalgpt/evalgpt/blob/main/CODE_OF_CONDUCT.md).
+Help us keep EvalGPT open and inclusive. Please read and follow our [Code of Conduct](https://github.com/evalgpt/evalgpt/blob/main/docs/CODE_OF_CONDUCT.md).
 
 ## Coding Rules
 
-Help us make ***EvalGPT*** one of the best available on the open source community. Make sure you follow all the coding rules and guidelines provided in the [Coding Guidelines Documentation](https://github.com/evalgpt/evalgpt/blob/main/CODING_GUIDELINES.md)
+Help us make ***EvalGPT*** one of the best available on the open source community. Make sure you follow all the coding rules and guidelines provided in the [Coding Guidelines Documentation](https://github.com/evalgpt/evalgpt/blob/main/docs/CODING_GUIDELINES.md)
 
 ## Issues
 
@@ -81,7 +81,7 @@ Follow these steps and guidelines when starting with a PR:
 * Follow our [Coding Rules](#coding-rules)
 * Commit your changes
 * Please provide a git message that explains what you've done
-* Make sure your commit messages follow the [conventional guidelines](https://github.com/evalgpt/evalgpt/blob/main/COMMIT_MESSAGE_GUIDELINES.md)
+* Make sure your commit messages follow the [conventional guidelines](https://github.com/evalgpt/evalgpt/blob/main/docs/COMMIT_MESSAGE_GUIDELINES.md)
 * Commit to the forked repository
 
 Example :pencil2: :

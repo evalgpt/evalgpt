@@ -71,7 +71,7 @@ ruby evalgpt.rb
 
 This is a weekend project for me & contributions are welcome!
 
-Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/CONTRIBUTING.md) for more details.
+Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/docs/CONTRIBUTING.md) for more details.
 
 ## Examples
 
