@@ -1,1 +1,6 @@
 .env
+output/*
+.DS_Store
+.python-version
+.ruby-version
+Gemfile.lock
