@@ -9,9 +9,9 @@
 
 * Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date & hostname`, `Write a swift program that asks for 2 numbers and returns gcd`)
 
-* Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
+* Only code responses are displayed by default. `--verbose` flag displays entire api response
 
-* When a code response is detected you'll be prompted to choose language to evaluate with or choose no to write a new prompt to generate code
+* Code responses will trigger a prompt to type a language to evaluate with (or type no to skip & return to prompt)
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
