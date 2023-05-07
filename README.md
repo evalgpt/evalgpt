@@ -22,7 +22,7 @@
 
 * Languages in the table have varying support for writing & running code generated from prompts.
 * Note that the language support depends on the language being installed locally and in the users `$PATH`
-* Edit [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile) to install specific languages and also update [evalgpt.rb](https://github.com/philipbroadway/evalgpt/blob/main/evalgpt.rb)
+* Edit [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile#L8) to install specific languages and also update [evalgpt.rb](https://github.com/philipbroadway/evalgpt/blob/main/evalgpt.rb#L11)
 
 | Language  | Write Generated Code | Execute Generated Code |
 |---| --- | --- |
@@ -48,7 +48,7 @@ cp .env.example .env # Add your openai api key to the .env file
 
 ## Docker Startup
 
-See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile) for info on configuring which languages are installed
+See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile#L8) for info on configuring which languages are installed
 
 ```
 docker build -t evalgpt . && docker run -it evalgpt
