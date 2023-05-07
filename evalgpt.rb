@@ -8,8 +8,8 @@ require 'pty'
 
 class EvalGPT
   
-  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift', 'bash']
-  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh']
+  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift', 'bash', 'node']
+  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh', 'js']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose)
@@ -103,30 +103,27 @@ class EvalGPT
     case language
     when 'ruby'
       eval(code)
-    when 'python', 'swift', 'javascript', 'bash'
-
+    when 'python', 'swift', 'javascript', 'bash', 'node'
+      $stdin.sync = true
       PTY.spawn("#{language == 'javascript' ? 'node' : language}", location) do |stdout, stdin, pid|
-      begin
-        # Create a separate thread to handle user input
-        input_thread = Thread.new do
-          begin
-            while line = $stdin.gets
-              stdin.puts(line)
-            end
-          rescue Errno::EIO
-            # End of input reached
+      input_thread = Thread.new do
+        begin
+          while line = $stdin.gets
+            stdin.puts(line)
           end
+        rescue Errno::EIO
+
         end
-    
-        # Print output from the script
-        stdout.each { |line| print line }
-    
-        # Wait for the input thread to finish before exiting the PTY block
-        input_thread.join
-      rescue Errno::EIO
-        # End of input reached
       end
+
+      stdout.each do |line|
+        print line
+        $stdout.flush
+      end
+
+      input_thread.join
     end
+
     else
       raise "Unsupported language: #{language}"
     end

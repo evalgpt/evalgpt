@@ -66,6 +66,11 @@ source .env
 ruby evalgpt.rb
 ```
 
+## Known Issues
+
+* Some language interpreters behave differently launching code; if you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io
+
+
 ## Examples
 
 ## Model Selection
