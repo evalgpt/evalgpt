@@ -46,6 +46,7 @@ cp .env.example .env # Add your openai api key to the .env file
 See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile#L8) for info on configuring which languages are installed
 
 ```
+git clone git@github.com:philipbroadway/evalgpt.git && cd evalgpt
 docker build -t evalgpt . && docker run -it evalgpt
 ```
 
