@@ -71,8 +71,8 @@ source .env
 ** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/prompt.png)
 
-![prompt](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
+![evaluating-result](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
 
 ## Using Swift
 
-![prompt](https://github.com/philipbroadway/evalgpt/blob/main/swift.png)
+![swift](https://github.com/philipbroadway/evalgpt/blob/main/example4.png)
