@@ -1,4 +1,10 @@
-> Ruby OpenAI client with support for executing code generated from prompts
+> Ruby OpenAI client with support for generating code from prompts and running the generated code
+
+## Dependancies
+
+* [OpenAI API key](https://platform.openai.com/account/api-keys)
+* [Ruby 3+](https://www.ruby-lang.org/en/) (run locally w/out docker)
+* [Docker](https://www.docker.com/products/docker-desktop) (run locally/remote w/ docker)
 
 ## Language Support
 
@@ -18,10 +24,7 @@
 | C++  | ❓ | ❓ |
 | Java  | ❓ | ❓ |
 
-## Installation
-
-You'll need an [openai API key](https://platform.openai.com/account/api-keys)
-[Docker](https://www.docker.com/products/docker-desktop)
+## Initialization
 
 ```
 mkdir output
@@ -30,7 +33,7 @@ cp .env.example .env # Add your openai api key to the .env file
 
 ```
 
-## Running Via Docker
+## Docker Startup
 
 See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile) for info on configuring which languages are installed
 
@@ -38,7 +41,7 @@ See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main
 docker build -t evalgpt . && docker run -it evalgpt
 ```
 
-## Local Usage
+## Local Startup
 
 * Ruby 3+ installed locally in $PATH
 * To generate and eval code in other languages locally the language must be installed locally in $PATH
