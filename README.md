@@ -68,6 +68,6 @@ source .env
 
 ![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/example1.png)
 
-![prompt](https://github.com/philipbroadway/evalgpt/blob/main/example2.png)
+![prompt](https://github.com/philipbroadway/evalgpt/blob/main/prompt.png)
 
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
