@@ -31,6 +31,7 @@ class EvalGPT
   end
 
   def chat
+    help
     loop do
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
@@ -41,6 +42,7 @@ class EvalGPT
         break
       end
       if user_message.downcase == 'help'
+        clear_screen
         help
         chat
         break
@@ -52,17 +54,24 @@ class EvalGPT
       }
       @spinner.auto_spin
       response = call_chatgpt
-      @spinner.stop('')
-      puts response&.colorize(:gray) if @verbose
+      @spinner.stop('[response parsed]')
+
+      if @verbose
+        puts ""
+        puts response&.colorize(:gray) 
+        puts ""
+      end
+      
       code_response = extract_code(response)
       if code_response
         puts ""
+        puts "Language detected: ".colorize(:white) + language&.colorize(:pink)
+        puts ""
         puts code_response&.colorize(:green)
         puts ""
-        print "Do you want to evaluate this code? (yes/no): ".colorize(:white)
+        print "Do you want to evaluate this #{language} code? (yes/no): ".colorize(:white)
         if gets.chomp.downcase == 'yes'
           begin
-            # eval_result = eval(code_response)
             eval_result = execute_code(code_response, language)
             puts "#{eval_result}"&.colorize(:yellow)
           rescue Exception => e
@@ -155,7 +164,6 @@ class EvalGPT
   
   def clear_screen
     puts "\e[H\e[2J"
-    help
   end
   
   def extract_code(response)
@@ -164,11 +172,14 @@ class EvalGPT
 
   def select_model
     models = get_models
+    puts ""
     puts "Available models:".colorize(:white)
+    puts ""
     #filtered = models.select { |model| @verbose ? true :  model.include?('davinci-search-query')}
     models.each_with_index do |model, index|
       puts "#{index}. #{model}".colorize(:green)
     end
+    puts ""
     print "Enter the number of the model you want to use: ".colorize(:white)
     chosen_model = gets.chomp.to_i - 1
     clear_screen
