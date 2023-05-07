@@ -39,7 +39,9 @@ See comments in Dockerfile for info on configuring which languages are installed
 docker build -t evalgpt . && docker run -it evalgpt
 ```
 
-## Usage
+## Local Usage
+
+* Assumes you have ruby installed locally in $PATH along with any languages you want to use
 
 ```
 source .env
