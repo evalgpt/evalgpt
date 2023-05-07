@@ -1,8 +1,7 @@
 ## What You Need
 
 * [OpenAI API key](https://platform.openai.com/account/api-keys)
-* [Ruby 3+](https://www.ruby-lang.org/en/) (run locally w/out docker)
-* [Docker](https://www.docker.com/products/docker-desktop) (run locally/remote w/ docker)
+* [Ruby 3+](https://www.ruby-lang.org/en/) or [Docker](https://www.docker.com/products/docker-desktop)
 
 ## How It Works
 
