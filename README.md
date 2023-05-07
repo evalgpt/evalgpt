@@ -29,8 +29,8 @@
 | Ruby  | ✅ |  ✅ |
 | Swift  | ✅ |  ✅ |
 | Bash  | ✅ |  ✅ |
-| Javascript  |  ✅ | ❌|
-| Python  |  ✅ | ❌|
+| Node/Javascript  |  ✅ | ✅
+| Python  |  ✅ | ✅
 
 ## Initialization
 
