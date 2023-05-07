@@ -68,6 +68,10 @@ source .env
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
+## Known Issues
+
+* Some language interpreters behave differently launching code; if you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io
+
 ## Examples
 
 ## Model Selection
