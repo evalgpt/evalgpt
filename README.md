@@ -68,6 +68,9 @@ source .env
 
 ![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/example1.png)
 
+** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/prompt.png)
 
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
+
+![prompt](https://github.com/philipbroadway/evalgpt/blob/main/swift.png)
