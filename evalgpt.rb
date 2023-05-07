@@ -26,19 +26,23 @@ class EvalGPT
         'content' => 'You are a senior engineering assistant.'
       }
     ]
-    @spinner = TTY::Spinner.new("[:spinner] Prompting `#{@selected_model}`@OpenAI", format: :spin)
+    @spinner = TTY::Spinner.new("[:spinner] Prompting #{@selected_model}@OpenAI", format: :spin)
     @model = select_model
   end
 
   def chat
     loop do
-      print 'Enter a prompt | exit | select_model'.colorize(:white)
       puts ""
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
       break if user_message.downcase == 'exit'
       if user_message.downcase == 'select_model'
         select_model
+        chat
+        break
+      end
+      if user_message.downcase == 'help'
+        help
         chat
         break
       end
@@ -119,6 +123,26 @@ class EvalGPT
     end
   end
 
+  def help
+    ascii = """
+███████ ██    ██  █████  ██       ██████  ██████  ████████ 
+██      ██    ██ ██   ██ ██      ██       ██   ██    ██    
+█████   ██    ██ ███████ ██      ██   ███ ██████     ██    
+██       ██  ██  ██   ██ ██      ██    ██ ██         ██    
+███████   ████   ██   ██ ███████  ██████  ██         ██    
+                                                           
+                                                            
+    """
+    puts ascii.colorize(:pink)
+    puts "Options:"
+    puts ""
+    puts "1. Type a prompt for #{@selected_model} mentioning language to use `ex: write a ruby program that..`"
+    puts "2. Type `select_model` to select a different model"
+    puts "3. Type `help` to show this message"
+    puts "4. Type `exit` to exit"
+    puts ""
+  end
+
   private
 
   def detect_language(message)
@@ -133,6 +157,7 @@ class EvalGPT
   
   def clear_screen
     puts "\e[H\e[2J"
+    help
   end
   
   def extract_code(response)
