@@ -82,7 +82,3 @@ source .env
 ## Evaluating Generated Code
 
 ![evaluating-result](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
-
-## Using Swift
-
-![swift](https://github.com/philipbroadway/evalgpt/blob/main/example4.png)
