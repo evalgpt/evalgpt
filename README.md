@@ -1,6 +1,6 @@
 ## Inspiration
 
-* This project was inspired by the original [gepl](https://github.com/lmortimer/gepl) project which aims to use openai to generate and run python code in an a repl 
+* This project was inspired by the [gepl](https://github.com/lmortimer/gepl) project which aims to use openai to generate and run python code in an a repl 
 
 ## What You Need
 
@@ -67,12 +67,6 @@ ruby evalgpt.rb
 
 * Some language interpreters behave differently launching code and running code output may be duplicated or missing. If you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io.
 
-## Contributing
-
-This is a weekend project for me & contributions are welcome!
-
-Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/docs/CONTRIBUTING.md) for more details.
-
 ## Examples
 
 ## Model Selection
@@ -83,3 +77,10 @@ Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/doc
 
 ** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/examples/prompt.png)
+
+
+## Contributing
+
+This is a weekend project for me & contributions are welcome!
+
+Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/docs/CONTRIBUTING.md) for more details.
