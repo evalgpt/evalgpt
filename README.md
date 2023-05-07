@@ -68,7 +68,7 @@ ruby evalgpt.rb
 
 ## Known Issues
 
-* Some language interpreters behave differently launching code; if you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io
+* Some language interpreters behave differently launching code and running code output may be duplicated or missing. If you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io.
 
 
 ## Examples
