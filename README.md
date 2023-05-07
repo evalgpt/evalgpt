@@ -19,7 +19,7 @@
 
 * Languages in the table have varying support for writing & running code generated from prompts.
 * Note that the language support depends on the language being installed locally and in the users `$PATH`
-* Edit [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile#L8) to install specific languages and also update [evalgpt.rb](https://github.com/philipbroadway/evalgpt/blob/main/evalgpt.rb#L11)
+* Edit [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile#L8) see also: [evalgpt.rb](https://github.com/philipbroadway/evalgpt/blob/main/evalgpt.rb#L11)
 
 | Language  | Write Generated Code | Execute Generated Code |
 |---| --- | --- |
@@ -62,6 +62,12 @@ ruby evalgpt.rb
 ## Known Issues
 
 * Some language interpreters behave differently launching code and running code output may be duplicated or missing. If you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io.
+
+## Contributing
+
+This is a weekend project for me & contributions are welcome!
+
+Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/CONTRIBUTING.md) for more details.
 
 ## Examples
 
