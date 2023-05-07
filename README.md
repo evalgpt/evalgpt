@@ -1,6 +1,6 @@
 ## Inspiration
 
-* This project was inspired by the original [gepl](https://github.com/lmortimer/gepl) project which uses python and openai to run generate and run python code 
+* This project was inspired by the original [gepl](https://github.com/lmortimer/gepl) project which aims to use openai to generate and run python code in an a repl 
 
 ## What You Need
 
