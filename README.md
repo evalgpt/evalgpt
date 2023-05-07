@@ -28,6 +28,10 @@
 
 ## Installation
 
+You'll need an [openai API key](https://platform.openai.com/account/api-keys)
+
+Ruby 3+ (Or [Docker](https://www.docker.com/products/docker-desktop) if using Dockerfile locally)
+
 ```
 bundle install
 
