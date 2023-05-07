@@ -21,21 +21,18 @@
 ## Installation
 
 You'll need an [openai API key](https://platform.openai.com/account/api-keys)
-
-Ruby 3+ (Or [Docker](https://www.docker.com/products/docker-desktop) if using Dockerfile locally)
+[Docker](https://www.docker.com/products/docker-desktop)
 
 ```
-bundle install
-
 mkdir output
 
 cp .env.example .env # Add your openai api key to the .env file
 
 ```
 
-## Dockerfile
+## Running Via Docker
 
-See comments in Dockerfile for info on configuring which languages are installed
+See comments in [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile) for info on configuring which languages are installed
 
 ```
 docker build -t evalgpt . && docker run -it evalgpt
@@ -43,9 +40,12 @@ docker build -t evalgpt . && docker run -it evalgpt
 
 ## Local Usage
 
-* Assumes you have ruby installed locally in $PATH along with any languages you want to use
-
+* Ruby 3+ installed locally in $PATH
+* To generate and eval code in other languages locally the language must be installed locally in $PATH
 ```
+
+bundle install
+
 source .env
 ./evalgpt.rb
 ```
