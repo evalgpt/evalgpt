@@ -134,7 +134,7 @@ class EvalGPT
   def select_model
     models = get_models
     puts "Available models:".colorize(:white)
-    filtered = models.select { |model| model.include?('gpt') || model.include?('davinci') }
+    filtered = models.select { |model| @verbose ? true :  model.include?('gpt-3.5-turbo-0301')}
     filtered.each_with_index do |model, index|
       puts "#{index + 1}. #{model}".colorize(:green)
     end
