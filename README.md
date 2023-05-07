@@ -1,9 +1,10 @@
+```
 ███████ ██    ██  █████  ██       ██████  ██████  ████████ 
 ██      ██    ██ ██   ██ ██      ██       ██   ██    ██    
 █████   ██    ██ ███████ ██      ██   ███ ██████     ██    
 ██       ██  ██  ██   ██ ██      ██    ██ ██         ██    
 ███████   ████   ██   ██ ███████  ██████  ██         ██    
-                                                           
+```                                                        
 > Ruby OpenAI client with support for executing code generated from prompts
 
 ## Language Support
