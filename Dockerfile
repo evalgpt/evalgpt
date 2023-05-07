@@ -67,5 +67,11 @@ COPY Gemfile /evalgptp/
 WORKDIR /evalgptp
 RUN gem install bundler && bundle install
 
+RUN mkdir /evalgptp/output
+
+RUN chmod 777 /evalgptp/output
+
 # Copy your app into the container
 COPY . /evalgptp
+
+CMD [ "/bin/bash", "-c", "source .env && ruby evalgpt.rb" ]
