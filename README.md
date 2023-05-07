@@ -64,7 +64,7 @@ source .env
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
-### Example
+### Examples
 
 ![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/example1.png)
 
@@ -72,5 +72,7 @@ source .env
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/prompt.png)
 
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
+
+## Using Swift
 
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/swift.png)
