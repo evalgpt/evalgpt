@@ -1,3 +1,7 @@
+## Inspiration
+
+* This project was inspired by the original [gepl](https://github.com/lmortimer/gepl) project which uses python and openai to run generate and run python code 
+
 ## What You Need
 
 * [OpenAI API key](https://platform.openai.com/account/api-keys)
