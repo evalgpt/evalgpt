@@ -11,7 +11,7 @@
 
 * Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
 
-* When a code response is detected you'll be prompted if you want to evaluate it (TODO: better support for switching detected language)
+* When a code response is detected you'll be prompted to choose language to evaluate with or choose no to write a new prompt to generate code
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
