@@ -37,7 +37,6 @@ See comments in Dockerfile for info on configuring which languages are installed
 
 ```
 docker build -t evalgpt . && docker run -it evalgpt
-root@somedocker:/evalgptp# source .env && ruby evalgpt.rb
 ```
 
 ## Usage
