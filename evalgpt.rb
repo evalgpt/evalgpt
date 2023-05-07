@@ -13,6 +13,7 @@ class EvalGPT
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose)
+    @selected_model = 'davinci-search-query'
     @api_key = api_key
     @verbose = verbose
     @headers = {
@@ -25,13 +26,13 @@ class EvalGPT
         'content' => 'You are a senior engineering assistant.'
       }
     ]
-    @spinner = TTY::Spinner.new("[:spinner] Waiting for API response ...", format: :pulse_2)
+    @spinner = TTY::Spinner.new("[:spinner] Prompting `#{@selected_model}`@OpenAI", format: :spin)
     @model = select_model
   end
 
   def chat
     loop do
-      print 'Enter a prompt | exit | select_model'.colorize(:pink)
+      print 'Enter a prompt | exit | select_model'.colorize(:white)
       puts ""
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
@@ -141,13 +142,14 @@ class EvalGPT
   def select_model
     models = get_models
     puts "Available models:".colorize(:white)
-    #filtered = models.select { |model| @verbose ? true :  model.include?('gpt-3.5-turbo-0301')}
+    #filtered = models.select { |model| @verbose ? true :  model.include?('davinci-search-query')}
     models.each_with_index do |model, index|
       puts "#{index}. #{model}".colorize(:green)
     end
     print "Enter the number of the model you want to use: ".colorize(:white)
     chosen_model = gets.chomp.to_i - 1
     clear_screen
+    @selected_model = models[chosen_model]
     models[chosen_model]
   end
 
@@ -182,7 +184,7 @@ end
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: example.rb [options]"
+  opts.banner = "Usage: evalgpt.rb [options]"
 
   opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
     options[:verbose] = v
