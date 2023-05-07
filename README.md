@@ -22,6 +22,7 @@
 
 * Languages in the table have varying support for writing & running code generated from prompts.
 * Note that the language support depends on the language being installed locally and in the users `$PATH`
+* Edit [Dockerfile](https://github.com/philipbroadway/evalgpt/blob/main/Dockerfile) to install specific languages and also update [evalgpt.rb](https://github.com/philipbroadway/evalgpt/blob/main/evalgpt.rb)
 
 | Language  | Write Generated Code | Execute Generated Code |
 |---| --- | --- |
