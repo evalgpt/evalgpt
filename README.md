@@ -31,11 +31,6 @@
 | Bash  | ✅ |  ✅ |
 | Javascript  |  ✅ | ❌|
 | Python  |  ✅ | ❌|
-| Go  | ❓|  ❓ |
-| Rust  | ❓ | ❓ |
-| C  | ❓ | ❓ |
-| C++  | ❓ | ❓ |
-| Java  | ❓ | ❓ |
 
 ## Initialization
 
