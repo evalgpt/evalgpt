@@ -34,7 +34,7 @@
 ```
 mkdir output
 
-cp .env.example .env # Add your openai api key to the .env file
+cp examples/.env-example .env # Add your openai api key to the .env file
 
 ```
 
@@ -67,9 +67,9 @@ ruby evalgpt.rb
 
 ## Model Selection
 
-![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/example1.png)
+![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/examples/example1.png)
 
 ## Generating code via prompt & running code
 
 ** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
-![prompt](https://github.com/philipbroadway/evalgpt/blob/57aba855b2cd53c651319e92fd4c5643e88a20e9/prompt.png)
+![prompt](https://github.com/philipbroadway/evalgpt/blob/main/examples/prompt.png)
