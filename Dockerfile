@@ -63,15 +63,21 @@ RUN if [ "$INSTALL_SWIFT" = "true" ] ; then \
 ENV PATH=$PATH:/usr/share/swift/usr/bin
 
 # Install required Ruby gems
-COPY Gemfile /evalgptp/
-WORKDIR /evalgptp
+COPY Gemfile /evalgpt/
+
+COPY .env /evalgpt/.env
+
+WORKDIR /evalgpt
+
 RUN gem install bundler && bundle install
 
-RUN mkdir /evalgptp/output
+RUN mkdir /evalgpt/output
 
-RUN chmod 777 /evalgptp/output
+RUN chmod 777 /evalgpt/output
 
 # Copy your app into the container
-COPY . /evalgptp
+COPY . /evalgpt
+
+RUN bash .env
 
 CMD [ "/bin/bash", "-c", "source .env && ruby evalgpt.rb --verbose" ]
