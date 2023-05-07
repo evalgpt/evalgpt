@@ -5,7 +5,7 @@ FROM debian:latest
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y curl wget git build-essential libssl-dev zlib1g-dev
 
-# UnComment the following lines to install the language(s) you want to use
+# UnComment the following lines to install the language(s) you want to use (then make sure to update SUPPORTED_LANGUAGES and SUPPORTED_EXTENSIONS in evalgpt.rb )
 # Ruby is always installed
 ARG INSTALL_NODE=true
 ARG INSTALL_PYTHON=true
