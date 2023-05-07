@@ -134,8 +134,8 @@ class EvalGPT
   def select_model
     models = get_models
     puts "Available models:".colorize(:white)
-    puts models
-    models.each_with_index do |model, index|
+    filtered = models.select { |model| model.include?('gpt') || model.include?('davinci') }
+    filtered.each_with_index do |model, index|
       puts "#{index + 1}. #{model}".colorize(:green)
     end
     print "Enter the number of the model you want to use: ".colorize(:white)
