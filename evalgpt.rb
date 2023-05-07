@@ -32,7 +32,6 @@ class EvalGPT
 
   def chat
     loop do
-      puts ""
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
       break if user_message.downcase == 'exit'
@@ -82,7 +81,6 @@ class EvalGPT
     File.open( "output/#{filename}", "w") do |file|
       file.write(code)
     end
-    puts "Code written to #{filename}"
     "#{Dir.pwd}/output/#{filename}"
   end
 
@@ -90,7 +88,9 @@ class EvalGPT
     location = write_code(code, language)
     lang = Terrapin::CommandLine.new("which", language == 'javascript' ? 'node' : language)
     lang = lang.run
-    puts "File saved to: #{location}"
+    puts ""
+    puts "File saved to: ".colorize(:white) + location.colorize(:red)
+    puts ""
     case language
     when 'ruby'
       eval(code)
@@ -129,9 +129,7 @@ class EvalGPT
 ██      ██    ██ ██   ██ ██      ██       ██   ██    ██    
 █████   ██    ██ ███████ ██      ██   ███ ██████     ██    
 ██       ██  ██  ██   ██ ██      ██    ██ ██         ██    
-███████   ████   ██   ██ ███████  ██████  ██         ██    
-                                                           
-                                                            
+███████   ████   ██   ██ ███████  ██████  ██         ██ 
     """
     puts ascii.colorize(:pink)
     puts "Options:"
