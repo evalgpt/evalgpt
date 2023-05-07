@@ -1,6 +1,4 @@
-> Ruby OpenAI client with support for generating code from prompts and running the generated code
-
-## Dependancies
+## What You Need
 
 * [OpenAI API key](https://platform.openai.com/account/api-keys)
 * [Ruby 3+](https://www.ruby-lang.org/en/) (run locally w/out docker)
@@ -18,7 +16,7 @@
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
-## Language Support
+## Languages It Supports
 
 * Languages in the table have varying support for writing & running code generated from prompts.
 * Note that the language support depends on the language being installed locally and in the users `$PATH`
@@ -32,7 +30,7 @@
 | Node/Javascript  |  ✅ | ✅
 | Python  |  ✅ | ✅
 
-## Initialization
+## Getting Started
 
 ```
 mkdir output
