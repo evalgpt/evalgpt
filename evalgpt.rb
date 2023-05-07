@@ -31,9 +31,16 @@ class EvalGPT
 
   def chat
     loop do
+      print 'Enter a prompt | exit | select_model'.colorize(:pink)
+      puts ""
       print 'User: '.colorize(:blue)
       user_message = gets.chomp
       break if user_message.downcase == 'exit'
+      if user_message.downcase == 'select_model'
+        select_model
+        chat
+        break
+      end
       language = detect_language(user_message)
       @messages << {
         'role' => 'user',
@@ -134,15 +141,14 @@ class EvalGPT
   def select_model
     models = get_models
     puts "Available models:".colorize(:white)
-    filtered = models.select { |model| @verbose ? true :  model.include?('gpt-3.5-turbo-0301')}
-    filtered.each_with_index do |model, index|
-      puts "#{index + 1}. #{model}".colorize(:green)
+    #filtered = models.select { |model| @verbose ? true :  model.include?('gpt-3.5-turbo-0301')}
+    models.each_with_index do |model, index|
+      puts "#{index}. #{model}".colorize(:green)
     end
     print "Enter the number of the model you want to use: ".colorize(:white)
     chosen_model = gets.chomp.to_i - 1
     clear_screen
     models[chosen_model]
-    
   end
 
   def get_models 

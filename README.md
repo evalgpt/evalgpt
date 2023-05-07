@@ -48,7 +48,7 @@ source .env
 ./evalgpt.rb
 ```
 
-* You'll be prompted to select a model by number (gpt variants work best)
+* You'll be prompted to select a model by number (`davinci-search-query` works best currently and some models don't support `/v1/chat/completions`)
 
 * Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date`, `Write a swift program that asks for 2 numbers and returns gcd`)
 
