@@ -83,6 +83,7 @@ class EvalGPT
   end
 
   def write_code(code, language)
+    create_directory_if_not_exists('output')
     timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
     filename = "#{language}_#{timestamp}.#{ext}"
@@ -165,7 +166,15 @@ class EvalGPT
   
   def extract_code(response)
     response[/```.*?\n(.+)\n```/m, 1]
-  end  
+  end
+
+  def create_directory_if_not_exists(relative_path)
+    absolute_path = File.expand_path(relative_path)
+    unless Dir.exist?(absolute_path)
+      Dir.mkdir(absolute_path)
+    end
+  end
+  
 
   def select_model
     models = get_models
