@@ -78,7 +78,3 @@ source .env
 
 ** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/57aba855b2cd53c651319e92fd4c5643e88a20e9/prompt.png)
-
-## Evaluating Generated Code
-
-![evaluating-result](https://github.com/philipbroadway/evalgpt/blob/main/example3.png)
