@@ -34,7 +34,7 @@ class EvalGPT
     help
     loop do
       print 'User: '.colorize(:blue)
-      user_message = gets.chomp
+      user_message = gets.to_s.chomp
       break if user_message.downcase == 'exit'
       if user_message.downcase == 'select_model'
         select_model
@@ -69,10 +69,12 @@ class EvalGPT
         puts ""
         puts code_response&.colorize(:green)
         puts ""
-        print "Do you want to evaluate this #{language} code? (yes/no): ".colorize(:white)
-        if gets.chomp.downcase == 'yes'
+        print "Evaluate code with (#{SUPPORTED_LANGUAGES.join('/')}/no): ".colorize(:white)
+        evaluate = gets.chomp.downcase
+        if evaluate != 'no'
+          new_language = evaluate != 'yes' ? evaluate : language
           begin
-            eval_result = execute_code(code_response, language)
+            eval_result = execute_code(code_response, new_language)
             puts "#{eval_result}"&.colorize(:yellow)
           rescue Exception => e
             puts "An error occurred while evaluating the code: #{e}".colorize(:red)
@@ -106,7 +108,7 @@ class EvalGPT
       eval(code)
     when 'python', 'swift', 'javascript', 'bash', 'node'
       $stdin.sync = true
-      PTY.spawn("#{language == 'javascript' ? 'node' : language}", location) do |stdout, stdin, pid|
+      PTY.spawn("#{language == 'javascript' ? 'node' : language}", "#{location}") do |stdout, stdin, pid|
       input_thread = Thread.new do
         begin
           while line = $stdin.gets
