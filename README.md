@@ -63,7 +63,7 @@ docker build -t evalgpt . && docker run -it evalgpt
 bundle install
 
 source .env
-./evalgpt.rb
+ruby evalgpt.rb
 ```
 
 ## Examples
