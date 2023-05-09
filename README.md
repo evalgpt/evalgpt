@@ -1,7 +1,3 @@
-## Inspiration
-
-* This project was inspired by the [gepl](https://github.com/lmortimer/gepl) project which aims to use openai to generate and run python code in an a repl 
-
 ## What You Need
 
 * [OpenAI API key](https://platform.openai.com/account/api-keys)
