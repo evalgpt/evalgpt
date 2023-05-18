@@ -13,7 +13,8 @@ class EvalGPT
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose)
-    @selected_model = 'davinci-search-query'
+    @history = []
+    @selected_model = 'gpt-3.5-turbo'
     @api_key = api_key
     @verbose = verbose
     @headers = {
@@ -23,7 +24,7 @@ class EvalGPT
     @messages = [
       {
         'role' => 'system',
-        'content' => 'You are a senior engineering assistant.'
+        'content' => 'You are a senior engineering assistant. You reply only in code, or a markdown comment. You do not leave comments in your code. Your code chooses to be clear vs clever.'
       }
     ]
     @spinner = TTY::Spinner.new("[:spinner] Prompting #{@selected_model}@OpenAI", format: :spin)
@@ -33,7 +34,7 @@ class EvalGPT
   def chat
     help
     loop do
-      print 'User: '.colorize(:blue)
+      print 'EvalGPT > '.colorize(:blue)
       user_message = gets.to_s.chomp
       break if user_message.downcase == 'exit'
       if user_message.downcase == 'select_model'
@@ -133,14 +134,8 @@ class EvalGPT
   end
 
   def help
-    ascii = """
-███████ ██    ██  █████  ██       ██████  ██████  ████████ 
-██      ██    ██ ██   ██ ██      ██       ██   ██    ██    
-█████   ██    ██ ███████ ██      ██   ███ ██████     ██    
-██       ██  ██  ██   ██ ██      ██    ██ ██         ██    
-███████   ████   ██   ██ ███████  ██████  ██         ██ 
-    """
-    puts ascii.colorize(:pink)
+    # ascii = ""
+    # puts ascii.colorize(:pink)
     puts "Options:"
     puts ""
     puts "1. Type a prompt for #{@selected_model} mentioning language to use `ex: write a ruby program that..`"
@@ -189,9 +184,10 @@ class EvalGPT
     end
     puts ""
     print "Enter the number of the model you want to use: ".colorize(:white)
-    chosen_model = gets.chomp.to_i - 1
+    chosen_model = 28#gets.chomp.to_i - 1
     clear_screen
     @selected_model = models[chosen_model]
+    @model = @selected_model
     models[chosen_model]
   end
 
@@ -206,21 +202,68 @@ class EvalGPT
     end
   end
 
+  def v1_completion(model, prompt)
+    begin
+      data = {
+        "model": model,
+        "prompt": prompt,
+        "max_tokens": 7,
+        "temperature": 0,
+        "top_p": 1,
+        "n": 1,
+        "stream": false,
+        "logprobs": null,
+        "stop": "\n"
+      }
+      response = RestClient.post('https://api.openai.com/v1/completions', data.to_json, @headers)
+      parsed_response = JSON.parse(response)
+      return parsed_response['choices'].first['text']
+    rescue RestClient::ExceptionWithResponse => e
+      puts e.response if @verbose
+    end
+  end
+
+  def v1_chat_completion(model, messages)
+    begin
+      data = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": 7,
+        "temperature": 0,
+        "top_p": 1,
+        "n": 1,
+        "stream": false,
+        "logprobs": null,
+        "stop": "\n"
+      }
+      response = RestClient.post('https://api.openai.com/v1/completions', data.to_json, @headers)
+      parsed_response = JSON.parse(response)
+      return parsed_response['choices'].first['text']
+    rescue RestClient::ExceptionWithResponse => e
+      puts e.response if @verbose
+    end
+  end
+
   def call_chatgpt
     data = {
       'max_tokens' => ENV['MAX_TOKENS']&.to_i,
       'temperature' => 0.7,
-      'model' => @model,
+      'model' => 'gpt-3.5-turbo',
       'messages' => @messages
     }
-  
+    puts "\nCalling chatgpt with data: #{data}".colorize(:yellow) if @verbose
+    result = nil
     begin
-      response = RestClient.post(API_URL, data.to_json, @headers)
+      response = RestClient.post('https://api.openai.com/v1/chat/completions', data.to_json, @headers)
       parsed_response = JSON.parse(response)
-      parsed_response['choices'].first['message']['content']
+      result = parsed_response['choices'].first['message']['content']
+      @history << {prompt: @messages.last['text'], response: result}
+      puts "\nHistory: #{@history.count}" if @verbose
     rescue RestClient::ExceptionWithResponse => e
       e.response
+      result = e.response
     end
+    result
   end
 end
 
