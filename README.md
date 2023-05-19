@@ -5,7 +5,7 @@
 
 ## How It Works
 
-* You'll be prompted to select a model by number (`davinci-search-query` works best currently)
+* ~~You'll be prompted to select a model by number (`davinci-search-query` works best currently)~~ [gpt-3-turbo branch](https://github.com/evalgpt/evalgpt/tree/gpt3-turbo) should be used
 
 * Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date & hostname`, `Write a swift program that asks for 2 numbers and returns gcd`)
 
