@@ -7,8 +7,8 @@ require 'terrapin'
 require 'pty'
 
 class EvalGPT
-  SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift', 'bash', 'node']
-  SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh', 'js']
+  SUPPORTED_LANGUAGES = ['text','ruby', 'javascript', 'python', 'swift', 'bash', 'node']
+  SUPPORTED_EXTENSIONS = ['txt','rb', 'js', 'py', 'swift', 'sh', 'js']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
   def initialize(api_key, verbose, input = nil, output_folder = nil)
@@ -58,11 +58,11 @@ class EvalGPT
       puts ""
       puts response
       puts ""
-      code_responses = extract_code(response)
-      if code_responses
-        code_responses.each_with_index do |code_response, index|
-          write_code(code_response, 'ruby')
-        end
+      response = extract_code(response)
+      if response
+        detected = detect_language(response) || 'text'
+        puts "detected: #{detected}"
+        write_code(response, detected)
       else
         puts "No code response found"
       end
@@ -122,10 +122,11 @@ class EvalGPT
   end
 
   def write_code(code, language)
+    puts "write_code: language: #{language}"
     timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
     filename = "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}"
-
+    # puts "ext: #{ext} filename: #{filename}"
     if @out
       create_directory_if_not_exists(@out)
       full_path = File.join(@out, filename)
@@ -212,9 +213,13 @@ class EvalGPT
   end
   
   def extract_code(response)
-    return nil unless response
-    # capture all code blocks in an array
-    response.scan(/```.*?\n(.+?)\n```/m).flatten
+    response
+    # return response unless response
+    # # capture all code blocks in an array
+    # r = response.scan(/```.*?\n(.+?)\n```/m).flatten
+    # puts "r: #{r}"
+    # puts "response: #{response} "
+    # r || response
   end
 
   def create_directory_if_not_exists(relative_path)
