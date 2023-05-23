@@ -7,13 +7,12 @@ require 'terrapin'
 require 'pty'
 
 class EvalGPT
-  
   SUPPORTED_LANGUAGES = ['ruby', 'javascript', 'python', 'swift', 'bash', 'node']
   SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh', 'js']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
-  def initialize(api_key, verbose)
-    @selected_model = 'davinci-search-query'
+  def initialize(api_key, verbose, input = nil, output_folder = nil)
+    @selected_model = 'gpt-3.5-turbo'
     @api_key = api_key
     @verbose = verbose
     @headers = {
@@ -23,14 +22,48 @@ class EvalGPT
     @messages = [
       {
         'role' => 'system',
-        'content' => 'You are a senior engineering assistant.'
+        'content' => 'You are a helpful programming assistant, complete each task responding with complete code that accomplishes each task.'
       }
     ]
+    @in = input
+    @out = output_folder
+
     @spinner = TTY::Spinner.new("[:spinner] Prompting #{@selected_model}@OpenAI", format: :spin)
-    @model = select_model
+    @model = 'gpt-3.5-turbo'
   end
 
   def chat
+    if @in && @out
+    input = ""
+      open @in do |f|
+        f.each_line do |line|
+          input = "#{input}#{line}"
+          puts line
+        end
+      end
+      @messages << {
+        'role' => 'user',
+        'content' => input
+      }
+      puts "\nInput file: ".colorize(:white) + @in.colorize(:red)
+      puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
+      
+      response = call_chatgpt
+      puts ""
+      puts response
+      puts ""
+      code_responses = extract_code(response)
+      if code_responses
+        code_responses.each_with_index do |code_response, index|
+          puts "\nCode response #{index + 1}: #{code_response}"
+          write_code(code_response, 'ruby')
+          puts "\n-> ".colorize(:white) + @out.colorize(:red)
+        end
+      else
+        puts "No code response found"
+      end
+      return
+    end
     help
     loop do
       print 'User: '.colorize(:blue)
@@ -85,15 +118,24 @@ class EvalGPT
   end
 
   def write_code(code, language)
-    create_directory_if_not_exists('output')
     timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
-    filename = "#{language}_#{timestamp}.#{ext}"
+    filename = "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}"
 
-    File.open( "output/#{filename}", "w") do |file|
-      file.write(code)
+    if @out
+      create_directory_if_not_exists(@out)
+      full_path = File.join(@out, filename)
+      File.open(full_path, "w") do |file|
+        file.write(code)
+      end
+      return full_path
+    else
+      create_directory_if_not_exists('output')
+      File.open( "output/#{filename}", "w") do |file|
+        file.write(code)
+        return "#{Dir.pwd}/output/#{filename}"
+      end
     end
-    "#{Dir.pwd}/output/#{filename}"
   end
 
   def execute_code(code, language)
@@ -144,9 +186,8 @@ class EvalGPT
     puts "Options:"
     puts ""
     puts "1. Type a prompt for #{@selected_model} mentioning language to use `ex: write a ruby program that..`"
-    puts "2. Type `select_model` to select a different model"
-    puts "3. Type `help` to show this message"
-    puts "4. Type `exit` to exit"
+    puts "2. Type `help` to show this message"
+    puts "3. Type `exit` to exit"
     puts ""
   end
 
@@ -167,7 +208,9 @@ class EvalGPT
   end
   
   def extract_code(response)
-    response[/```.*?\n(.+)\n```/m, 1]
+    return nil unless response
+    # capture all code blocks in an array
+    response.scan(/```.*?\n(.+?)\n```/m).flatten
   end
 
   def create_directory_if_not_exists(relative_path)
@@ -176,31 +219,21 @@ class EvalGPT
       Dir.mkdir(absolute_path)
     end
   end
-  
 
   def select_model
     models = get_models
-    puts ""
-    puts "Available models:".colorize(:white)
-    puts ""
-    #filtered = models.select { |model| @verbose ? true :  model.include?('davinci-search-query')}
-    models.each_with_index do |model, index|
-      puts "#{index}. #{model}".colorize(:green)
-    end
-    puts ""
-    print "Enter the number of the model you want to use: ".colorize(:white)
-    chosen_model = gets.chomp.to_i - 1
     clear_screen
-    @selected_model = models[chosen_model]
-    models[chosen_model]
+    @selected_model =  'gpt-3.5-turbo'
   end
 
-  def get_models 
+  def get_models
     begin
       response = RestClient.get('https://api.openai.com/v1/models', @headers)
       parsed_response = JSON.parse(response)
       parsed_response = parsed_response['data']
+     
       parsed_response.map { |model| model['id'] }
+      
     rescue RestClient::ExceptionWithResponse => e
       e.response
     end
@@ -213,13 +246,15 @@ class EvalGPT
       'model' => @model,
       'messages' => @messages
     }
-  
+    puts "[POST] #{API_URL}, #{@headers}, #{data}".colorize(:yellow)
     begin
       response = RestClient.post(API_URL, data.to_json, @headers)
       parsed_response = JSON.parse(response)
+      puts "[RESPONSE] #{response}".colorize(:green)
       parsed_response['choices'].first['message']['content']
     rescue RestClient::ExceptionWithResponse => e
       e.response
+      puts "Error:" + " #{e.response}"
     end
   end
 end
@@ -227,10 +262,21 @@ end
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: evalgpt.rb [options]"
-
+  
+  opts.on('-i', '--input INPUT', 'Input to send to prompt') do |i|
+    options[:input] = i
+  end
+  opts.on('-o', '--output OUTPUT', 'Output folder') do |o|
+    options[:output] = o
+  end  
   opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
     options[:verbose] = v
   end
 end.parse!
 
-EvalGPT.new(ENV['GPT_API_KEY'], options[:verbose]).chat
+api_key = ENV['GPT_API_KEY'] || 'Your API Key here'
+verbose = options[:verbose] || false
+input = options[:input] || nil
+output = options[:output] || nil
+
+EvalGPT.new(api_key, verbose, input, output).chat
