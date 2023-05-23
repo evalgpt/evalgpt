@@ -69,9 +69,6 @@ ruby evalgpt.rb
 
 ## Examples
 
-## Model Selection
-
-![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/examples/example1.png)
 
 ## Generating code via prompt & running code
 
