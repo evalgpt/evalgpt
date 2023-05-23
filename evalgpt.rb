@@ -35,17 +35,20 @@ class EvalGPT
   def chat
     if @in && @out
     input = ""
+    puts "\[prommpt] ".colorize(:green) + @in.colorize(:red) + ":\n"
+    puts "```"
       open @in do |f|
         f.each_line do |line|
           input = "#{input}#{line}"
-          puts line
+          puts "#{line}"
         end
       end
+    puts "```"
       @messages << {
         'role' => 'user',
         'content' => input
       }
-      puts "\nPrompt: ".colorize(:green) + @in.colorize(:red)
+      
       puts "\n"
       # puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
       @spinner.auto_spin
@@ -251,7 +254,7 @@ class EvalGPT
     begin
       response = RestClient.post(API_URL, data.to_json, @headers)
       parsed_response = JSON.parse(response)
-      puts "\n[RESPONSE] #{response}\n".colorize(:green)
+      puts "\n\n[RESPONSE] #{response}\n".colorize(:green)
       parsed_response['choices'].first['message']['content']
     rescue RestClient::ExceptionWithResponse => e
       e.response
