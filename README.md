@@ -5,8 +5,6 @@
 
 ## How It Works
 
-* You'll be prompted to select a model by number (`davinci-search-query` works best currently)
-
 * Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date & hostname`, `Write a swift program that asks for 2 numbers and returns gcd`)
 
 * Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
@@ -36,6 +34,12 @@ mkdir output
 
 cp examples/.env-example .env # Add your openai api key to the .env file
 
+```
+
+## Command Line
+
+``` 
+ruby evalgpt.rb --in path/to/file/with/prompt --out folder/to/write/output/to
 ```
 
 ## Docker Startup
