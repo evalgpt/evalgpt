@@ -1,5 +1,3 @@
-Refine the ruby program
-
 class JekyllApp
   attr_accessor :title, :ga_tracker, :style_sheet
 

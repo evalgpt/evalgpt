@@ -11,7 +11,7 @@ class EvalGPT
   SUPPORTED_EXTENSIONS = ['rb', 'js', 'py', 'swift', 'sh', 'js']
   API_URL = 'https://api.openai.com/v1/chat/completions'
 
-  def initialize(api_key, verbose, input = nil, output = nil)
+  def initialize(api_key, verbose, input = nil, output_folder = nil)
     @selected_model = 'gpt-3.5-turbo'
     @api_key = api_key
     @verbose = verbose
@@ -22,11 +22,11 @@ class EvalGPT
     @messages = [
       {
         'role' => 'system',
-        'content' => 'You are helpfull programing assistant, complete each task responding with complete code that accomplishes each task.'
+        'content' => 'You are a helpful programming assistant, complete each task responding with complete code that accomplishes each task.'
       }
     ]
     @in = input
-    @out = output
+    @out = output_folder
 
     @spinner = TTY::Spinner.new("[:spinner] Prompting #{@selected_model}@OpenAI", format: :spin)
     @model = 'gpt-3.5-turbo'
@@ -52,12 +52,13 @@ class EvalGPT
       puts ""
       puts response
       puts ""
-      code_response = extract_code(response)
-      if code_response
-
-        puts "\nCode response: #{code_response}"
-        write_code(code_response, 'ruby')
-        puts "\n-> ".colorize(:white) + @out.colorize(:red)
+      code_responses = extract_code(response)
+      if code_responses
+        code_responses.each_with_index do |code_response, index|
+          puts "\nCode response #{index + 1}: #{code_response}"
+          write_code(code_response, 'ruby')
+          puts "\n-> ".colorize(:white) + @out.colorize(:red)
+        end
       else
         puts "No code response found"
       end
@@ -117,17 +118,19 @@ class EvalGPT
   end
 
   def write_code(code, language)
-    create_directory_if_not_exists('output')
     timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
-    filename = "#{language}_#{timestamp}.#{ext}"
+    filename = "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}"
+
     if @out
-      filename = @out
-      File.open( @out, "w") do |file|
+      create_directory_if_not_exists(@out)
+      full_path = File.join(@out, filename)
+      File.open(full_path, "w") do |file|
         file.write(code)
       end
-      return "#{@out}"
+      return full_path
     else
+      create_directory_if_not_exists('output')
       File.open( "output/#{filename}", "w") do |file|
         file.write(code)
         return "#{Dir.pwd}/output/#{filename}"
@@ -206,7 +209,8 @@ class EvalGPT
   
   def extract_code(response)
     return nil unless response
-    response[/```.*?\n(.+)\n```/m, 1]
+    # capture all code blocks in an array
+    response.scan(/```.*?\n(.+?)\n```/m).flatten
   end
 
   def create_directory_if_not_exists(relative_path)
@@ -262,7 +266,7 @@ OptionParser.new do |opts|
   opts.on('-i', '--input INPUT', 'Input to send to prompt') do |i|
     options[:input] = i
   end
-  opts.on('-o', '--output OUTPUT', 'Output save path') do |o|
+  opts.on('-o', '--output OUTPUT', 'Output folder path') do |o|
     options[:output] = o
   end  
   opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
