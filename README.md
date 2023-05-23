@@ -5,13 +5,13 @@
 
 ## How It Works
 
-* You'll be prompted to select a model by number (`davinci-search-query` works best currently)
+* ~~You'll be prompted to select a model by number (`davinci-search-query` works best currently)~~ [gpt-3-turbo branch](https://github.com/evalgpt/evalgpt/tree/gpt3-turbo) should be used
 
 * Write a prompt using a language flag (e.g. `Write a ruby game of tic-tac-toe`, `Write a bash script to print the current date & hostname`, `Write a swift program that asks for 2 numbers and returns gcd`)
 
-* Only code responses are displayed by default. If you aren't seeing responses use `--verbose` flag to debug and see what the api is responding with
+* Only code responses are displayed by default. `--verbose` flag displays entire api response
 
-* When a code response is detected you'll be prompted if you want to evaluate it (TODO: better support for switching detected language)
+* Code responses will trigger a prompt to type a language to evaluate with (or type no to skip & return to prompt)
 
 * If your responses are being cut off, you can increase the `max_tokens` in the `.env` file (see [model token limits](https://platform.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api) for more info)
 
@@ -63,12 +63,6 @@ ruby evalgpt.rb
 
 * Some language interpreters behave differently launching code and running code output may be duplicated or missing. If you eval code and expect a prompt to be shown assume its being shown and enter a value. Investigating way to consistently handle tty io.
 
-## Contributing
-
-This is a weekend project for me & contributions are welcome!
-
-Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/docs/CONTRIBUTING.md) for more details.
-
 ## Examples
 
 ## Model Selection
@@ -79,3 +73,10 @@ Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/doc
 
 ** Prompts can take a long time to finish - be patient or use ctrl+c to exit & return to prompt
 ![prompt](https://github.com/philipbroadway/evalgpt/blob/main/examples/prompt.png)
+
+
+## Contributing
+
+This is a weekend project for me & contributions are welcome!
+
+Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/docs/CONTRIBUTING.md) for more details.
