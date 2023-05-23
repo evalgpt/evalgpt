@@ -6,6 +6,7 @@ require 'tty-spinner'
 require 'terrapin'
 require 'pty'
 
+
 class EvalGPT
   SUPPORTED_LANGUAGES = ['text','ruby', 'javascript', 'python', 'swift', 'bash', 'node']
   SUPPORTED_EXTENSIONS = ['txt','rb', 'js', 'py', 'swift', 'sh', 'js']
@@ -199,7 +200,17 @@ class EvalGPT
   private
 
   def detect_language(message)
-    SUPPORTED_LANGUAGES.find { |lang| message.downcase.include?(lang) }
+    rb = /(?<!def\s)(?<!class\s)(?<!require\s)(?<!include\s)[\w.]+/
+    py = /(?<!def\s)(?<!class\s)(?<!import\s)(?<!from\s)[\w.]+/
+    ruby_matches = message.scan(rb)
+    python_matches = message.scan(py)
+    if ruby_matches.count
+      return 'ruby'
+    elsif python_matches.count
+      return 'python'
+    else
+      SUPPORTED_LANGUAGES.find { |lang| message.downcase.include?(lang) }
+    end
   end
 
   def print_two_columns(items)

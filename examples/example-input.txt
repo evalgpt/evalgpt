@@ -1,28 +1,57 @@
-Refine the ruby program
+Rewrite the python program in ruby:
+class TicTacToe:
+  def __init__(self):
+    self.board = [[" " for _ in range(3)] for _ in range(3)]
+  
+  def print_board(self):
+    print("-------------")
+    for row in self.board:
+      print(" {} | {} | {} \n-------------".format(row[0], row[1], row[2]))
+  
+  def make_move(self, player, row, col):
+    if self.board[row][col] == " ":
+      self.board[row][col] = player
+      return True
+    else:
+      return False
+  
+  def check_win(self, player):
+    win_patterns = [
+      [[0,0], [0,1], [0,2]],
+      [[1,0], [1,1], [1,2]],
+      [[2,0], [2,1], [2,2]],
+      [[0,0], [1,0], [2,0]],
+      [[0,1], [1,1], [2,1]],
+      [[0,2], [1,2], [2,2]],
+      [[0,0], [1,1], [2,2]],
+      [[0,2], [1,1], [2,0]]
+    ]
+    
+    for pattern in win_patterns:
+      if all(self.board[pos[0]][pos[1]] == player for pos in pattern):
+        return True
+    
+    return False
+  
+  def game_loop(self):
+    current_player = "X"
+    while True:
+      self.print_board()
+      row, col = input(f"Player {current_player}, make your move (row, col): ").split(",")
+      row, col = int(row), int(col)
+      if self.make_move(current_player, row, col):
+        if self.check_win(current_player):
+          self.print_board()
+          print(f"Player {current_player} wins!")
+          break
+        elif all(cell != " " for row in self.board for cell in row):
+          self.print_board()
+          print("It's a tie!")
+          break
+        else:
+          current_player = "O" if current_player == "X" else "X"
+      else:
+        print("Invalid move, please try again.")
 
-class JekyllApp
-  attr_accessor :title, :ga_tracker, :style_sheet
-
-  def initialize(title, ga_tracker, style_sheet)
-    @title = title
-    @ga_tracker = ga_tracker
-    @style_sheet = style_sheet
-  end
-end
-
-# Create 5 Jekyll apps
-app1 = JekyllApp.new("App 1", "UA-12345678-1", "style1.css")
-app2 = JekyllApp.new("App 2", "UA-12345678-2", "style2.css")
-app3 = JekyllApp.new("App 3", "UA-12345678-3", "style3.css")
-app4 = JekyllApp.new("App 4", "UA-12345678-4", "style4.css")
-app5 = JekyllApp.new("App 5", "UA-12345678-5", "style5.css")
-
-# Print out the Jekyll apps
-puts "Jekyll Apps:"
-puts "Title \t\t GA Tracker \t\t Style Sheet"
-puts "-----------------------------------------------"
-puts "#{app1.title} \t #{app1.ga_tracker} \t\t #{app1.style_sheet}"
-puts "#{app2.title} \t #{app2.ga_tracker} \t\t #{app2.style_sheet}"
-puts "#{app3.title} \t #{app3.ga_tracker} \t\t #{app3.style_sheet}"
-puts "#{app4.title} \t #{app4.ga_tracker} \t\t #{app4.style_sheet}"
-puts "#{app5.title} \t #{app5.ga_tracker} \t\t #{app5.style_sheet}"
+game = TicTacToe()
+game.game_loop()
