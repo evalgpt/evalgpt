@@ -45,19 +45,20 @@ class EvalGPT
         'role' => 'user',
         'content' => input
       }
-      puts "\nInput file: ".colorize(:white) + @in.colorize(:red)
-      puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
-      
+      puts "\nPrompt: ".colorize(:green) + @in.colorize(:red)
+      puts "\n"
+      # puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
+      @spinner.auto_spin
+      puts "\n"
       response = call_chatgpt
+      @spinner.stop('[response parsed]')
       puts ""
       puts response
       puts ""
       code_responses = extract_code(response)
       if code_responses
         code_responses.each_with_index do |code_response, index|
-          puts "\nCode response #{index + 1}: #{code_response}"
           write_code(code_response, 'ruby')
-          puts "\n-> ".colorize(:white) + @out.colorize(:red)
         end
       else
         puts "No code response found"
@@ -87,7 +88,7 @@ class EvalGPT
       }
       @spinner.auto_spin
       response = call_chatgpt
-      @spinner.stop('[response parsed]')
+      @spinner.stop("[response]: #{response}")
 
       if @verbose
         puts ""
@@ -246,11 +247,11 @@ class EvalGPT
       'model' => @model,
       'messages' => @messages
     }
-    puts "[POST] #{API_URL}, #{@headers}, #{data}".colorize(:yellow)
+    puts "\n#{data}\n".colorize(:yellow)
     begin
       response = RestClient.post(API_URL, data.to_json, @headers)
       parsed_response = JSON.parse(response)
-      puts "[RESPONSE] #{response}".colorize(:green)
+      puts "\n[RESPONSE] #{response}\n".colorize(:green)
       parsed_response['choices'].first['message']['content']
     rescue RestClient::ExceptionWithResponse => e
       e.response

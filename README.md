@@ -37,7 +37,7 @@ cp examples/.env-example .env # Add your openai api key to the .env file
 ```
 
 ## Command Line
-
+![command-line](https://github.com/philipbroadway/evalgpt/blob/main/examples/command-line.png)
 ``` 
 ruby evalgpt.rb --in path/to/file/with/prompt --out folder/to/write/output/to
 ```
