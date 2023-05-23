@@ -75,9 +75,6 @@ Please see [contributing guide](https://github.com/evalgpt/evalgpt/blob/main/doc
 
 ## Examples
 
-## Model Selection
-
-![model-selection](https://github.com/philipbroadway/evalgpt/blob/main/examples/example1.png)
 
 ## Generating code via prompt & running code
 
