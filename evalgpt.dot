@@ -1,0 +1,38 @@
+digraph G {
+  node [shape=record];
+
+  class [label="EvalGPT"];
+  initialize [label="initialize"];
+  chat [label="chat"];
+  write_code [label="write_code"];
+  execute_code [label="execute_code"];
+  help [label="help"];
+  detect_language [label="detect_language"];
+  print_two_columns [label="print_two_columns"];
+  clear_screen [label="clear_screen"];
+  extract_code [label="extract_code"];
+  create_directory_if_not_exists [label="create_directory_if_not_exists"];
+  select_model [label="select_model"];
+  get_models [label="get_models"];
+  call_chatgpt [label="call_chatgpt"];
+  options [label="options"];
+
+  class -> initialize [label="Instantiates"];
+  initialize -> select_model [label="Calls"];
+
+  chat -> help [label="Calls"];
+  chat -> select_model [label="Calls"];
+  chat -> clear_screen [label="Calls"];
+  chat -> detect_language [label="Calls"];
+  chat -> call_chatgpt [label="Calls"];
+  chat -> extract_code [label="Calls"];
+  chat -> execute_code [label="Calls"];
+  
+  execute_code -> write_code [label="Calls"];
+  execute_code -> create_directory_if_not_exists [label="Calls"];
+
+  select_model -> get_models [label="Calls"];
+  select_model -> clear_screen [label="Calls"];
+
+  options -> chat [label="Invokes"];
+}
