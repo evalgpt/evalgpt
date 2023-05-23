@@ -266,7 +266,7 @@ OptionParser.new do |opts|
   opts.on('-i', '--input INPUT', 'Input to send to prompt') do |i|
     options[:input] = i
   end
-  opts.on('-o', '--output OUTPUT', 'Output folder path') do |o|
+  opts.on('-o', '--output OUTPUT', 'Output folder') do |o|
     options[:output] = o
   end  
   opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
