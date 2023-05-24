@@ -54,8 +54,7 @@ class EvalGPT
       }
       
       puts "\n"
-      # puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
-      # @spinner.auto_spin
+
       puts "\n"
       response = stream_chatgpt
       #response = call_chatgpt
@@ -64,10 +63,16 @@ class EvalGPT
       puts response
       puts ""
       response = extract_code(response)
+      puts "\n\extract_code: #{response}\n\n"
       if response
-        detected = detect_language(response) || 'text'
-        puts "detected: #{detected}"
-        write_code(response, detected)
+        response.each do |k|
+          puts k
+          key = k[0]
+          v = k[1]
+          detected = detect_language(v) || 'text'
+          puts "k: #{key} v:#{v}"
+          write_code(v, detected, key)
+        end
       else
         puts "No code response found"
       end
@@ -104,7 +109,7 @@ class EvalGPT
         puts ""
       end
       
-      code_response = extract_code(response)
+      code_response = response#extract_code(response)
       if code_response
         puts ""
         puts "Language detected: ".colorize(:white) + language&.colorize(:pink)
@@ -126,15 +131,25 @@ class EvalGPT
     end
   end
 
-  def write_code(code, language)
-    puts "write_code: language: #{language}"
+  def write_code(code, language, filename = nil)
+    puts "write_code: language: #{language} filename: #{filename}"
     timestamp = Time.now.strftime("%Y-%m-%d_%H-%M-%S")
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
-    filename = "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}"
-    # puts "ext: #{ext} filename: #{filename}"
+    filename = "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}" unless filename
+    puts "ext: #{ext} filename: #{filename}"
     if @out
-      create_directory_if_not_exists(@out)
+      
       full_path = File.join(@out, filename)
+      dir = File.dirname(full_path)
+      create_directory_if_not_exists(@out)
+      FileUtils.mkdir_p(@out) unless File.directory?(@out)
+      paths = full_path.split('/')
+      paths.pop
+      paths = paths.join('/')
+      if paths
+        FileUtils.mkdir_p(paths) unless File.directory?(paths)
+      end
+      puts ":write: #{full_path}"
       File.open(full_path, "w") do |file|
         file.write(code)
       end
@@ -204,12 +219,12 @@ class EvalGPT
   private
 
   def detect_language(message)
-    message = message.strip
+    message = message&.strip
     # Check for shebang lines, which are a strong indicator of script language
-    if message.start_with?('#!')
-      return 'bash' if message.include?('bash') || message.include?('sh')
-      return 'python' if message.include?('python')
-      return 'ruby' if message.include?('ruby')
+    if message&.start_with?('#!')
+      return 'bash' if message&.include?('bash') || message&.include?('sh')
+      return 'python' if message&.include?('python')
+      return 'ruby' if message&.include?('ruby')
     end
 
     case message
@@ -245,20 +260,24 @@ class EvalGPT
   end
   
   def extract_code(response)
-    response
-    # return response unless response
-    # # capture all code blocks in an array
-    # r = response.scan(/```.*?\n(.+?)\n```/m).flatten
-    # puts "r: #{r}"
-    # puts "response: #{response} "
-    # r || response
+    matches = response.scan(/(\*\*(.*?)\*\*)\n```.*?\n([\s\S]*?)\n```/m)
+    files = {}
+    puts "matches: #{matches}"
+  
+    matches.each do |match|
+      files[match[1]] = match[2].strip
+    end
+  
+    puts "files: #{files}"
+    files
   end
+  
+
 
   def create_directory_if_not_exists(relative_path)
     absolute_path = File.expand_path(relative_path)
-    unless Dir.exist?(absolute_path)
-      Dir.mkdir(absolute_path)
-    end
+    puts "absolute_path: #{absolute_path}"
+    FileUtils.mkdir_p(absolute_path) unless File.directory?(absolute_path)
   end
 
   def select_model
