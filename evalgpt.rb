@@ -50,7 +50,7 @@ class EvalGPT
     puts "```"
       @messages << {
         'role' => 'user',
-        'content' => 'Always respond with text format that indates path if relevant, filename (markdown bold) a new line then content for the file(s) the user will create. Ex: **file_1**\n```lang\n content\n```  **file_2**\n```lang\n content\n``` ' + input
+        'content' => 'Always respond with text format that indates path if relevant, filename (markdown bold) a new line then content for the file(s) the user will create. Ex: **file_1**\n```\n content\n```  **file_2**\n```\n content\n``` ' + input
       }
       
       puts "\n"
@@ -260,7 +260,7 @@ class EvalGPT
   end
   
   def extract_code(response)
-    matches = response.scan(/(\*\*(.*?)\*\*)\n```.*?\n([\s\S]*?)\n```/m)
+    matches = response.scan(/(\*\*(.*?)\*\*)\n```.*?\n?([\s\S]*?)\n```/m)
     files = {}
     puts "matches: #{matches}"
   
