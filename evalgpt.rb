@@ -5,15 +5,18 @@ require 'optparse'
 require 'tty-spinner'
 require 'terrapin'
 require 'pty'
+require 'excon'
 
-
+# MODEL='gpt-3.5-turbo-0301'
+MODEL='gpt-3.5-turbo'
+API_URL = 'https://api.openai.com/v1/chat/completions'
 class EvalGPT
   SUPPORTED_LANGUAGES = ['text','ruby', 'javascript', 'python', 'swift', 'bash', 'node']
   SUPPORTED_EXTENSIONS = ['txt','rb', 'js', 'py', 'swift', 'sh', 'js']
-  API_URL = 'https://api.openai.com/v1/chat/completions'
+  
 
   def initialize(api_key, verbose, input = nil, output_folder = nil)
-    @selected_model = 'gpt-3.5-turbo'
+    @selected_model = MODEL
     @api_key = api_key
     @verbose = verbose
     @headers = {
@@ -30,7 +33,7 @@ class EvalGPT
     @out = output_folder
 
     @spinner = TTY::Spinner.new("[:spinner] Prompting #{@selected_model}@OpenAI", format: :spin)
-    @model = 'gpt-3.5-turbo'
+    @model = MODEL
   end
 
   def chat
@@ -54,7 +57,8 @@ class EvalGPT
       # puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
       @spinner.auto_spin
       puts "\n"
-      response = call_chatgpt
+      response = stream_chatgpt
+      #response = call_chatgpt
       @spinner.stop('[response parsed]')
       puts ""
       puts response
@@ -243,7 +247,7 @@ class EvalGPT
   def select_model
     models = get_models
     clear_screen
-    @selected_model =  'gpt-3.5-turbo'
+    @selected_model =  MODEL
   end
 
   def get_models
@@ -277,8 +281,38 @@ class EvalGPT
       puts "Error:" + " #{e.response}"
     end
   end
-end
 
+  def stream_chatgpt
+    data = {
+      'max_tokens' => ENV['MAX_TOKENS']&.to_i,
+      'temperature' => 0.7,
+      'model' => @model,
+      'messages' => @messages,
+      'stream' => true
+    }
+    result = ''
+    response = Excon.post(
+      API_URL,
+      body: data.to_json,
+      headers: @headers.merge('Content-Type' => 'application/json'),
+      response_block: lambda { |chunk, remaining_bytes, total_bytes|
+        parsed_chunk = JSON.parse(chunk.gsub('data:', '')) rescue nil
+        if parsed_chunk&.key?('choices')
+          puts parsed_chunk['choices'].first['delta']['content']
+          result = "#{result}#{parsed_chunk['choices'].first['delta']['content']}"
+        end
+      }
+    )
+  
+    if response.status != 200
+      puts "Error: #{response.status} #{response.body}"
+    end
+    result
+  rescue => e
+    puts "Error: #{e.message}"
+  end
+  
+end
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: evalgpt.rb [options]"
