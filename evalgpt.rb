@@ -26,7 +26,7 @@ class EvalGPT
     @messages = [
       {
         'role' => 'system',
-        'content' => 'You are a helpful programming assistant, complete each task responding with complete code that accomplishes each task.'
+        'content' => 'You are a helpful programming assistant, complete each task responding with complete code that accomplishes each task. Only respond with code and do not comment or give examples in your code.'
       }
     ]
     @in = input
@@ -55,7 +55,7 @@ class EvalGPT
       
       puts "\n"
       # puts "\nContent: ".colorize(:white) + @messages.join("\n").colorize(:green)
-      @spinner.auto_spin
+      # @spinner.auto_spin
       puts "\n"
       response = stream_chatgpt
       #response = call_chatgpt
@@ -94,8 +94,8 @@ class EvalGPT
         'role' => 'user',
         'content' => user_message
       }
-      @spinner.auto_spin
-      response = call_chatgpt
+      # @spinner.auto_spin
+      response = stream_chatgpt
       @spinner.stop("[response]: #{response}")
 
       if @verbose
@@ -203,19 +203,52 @@ class EvalGPT
 
   private
 
+  # def detect_language(message)
+  #   rb = /(?<!def\s)(?<!class\s)(?<!require\s)(?<!include\s)[\w.]+/
+  #   py = /(?<!def\s)(?<!class\s)(?<!import\s)(?<!from\s)[\w.]+/
+  #   ruby_matches = message.scan(rb)
+  #   python_matches = message.scan(py)
+  #   if ruby_matches.count
+  #     return 'ruby'
+  #   elsif python_matches.count
+  #     return 'python'
+  #   else
+  #     SUPPORTED_LANGUAGES.find { |lang| message.downcase.include?(lang) }
+  #   end
+  # end
+
   def detect_language(message)
-    rb = /(?<!def\s)(?<!class\s)(?<!require\s)(?<!include\s)[\w.]+/
-    py = /(?<!def\s)(?<!class\s)(?<!import\s)(?<!from\s)[\w.]+/
-    ruby_matches = message.scan(rb)
-    python_matches = message.scan(py)
-    if ruby_matches.count
-      return 'ruby'
-    elsif python_matches.count
-      return 'python'
+    message = message.strip
+    # Check for shebang lines, which are a strong indicator of script language
+    if message.start_with?('#!')
+      return 'shell' if message.include?('bash') || message.include?('sh')
+      return 'python' if message.include?('python')
+      return 'ruby' if message.include?('ruby')
+    end
+  
+    # Otherwise, check for keywords distinctive to each language
+    case message
+    when /def .* end/ # Ruby function
+      'ruby'
+    when /class .* end/ # Ruby class
+      'ruby'
+    when /def .*:/ # Python function
+      'python'
+    when /class .*:/ # Python class
+      'python'
+    when /let .* =/ # Swift variable declaration
+      'swift'
+    when /func .* {/ # Swift function
+      'swift'
+    when /\$[A-Za-z0-9_]+/ # Shell variable
+      'shell'
+    when /echo .*/ # Shell echo command
+      'shell'
     else
-      SUPPORTED_LANGUAGES.find { |lang| message.downcase.include?(lang) }
+      'text'
     end
   end
+  
 
   def print_two_columns(items)
     items.each_slice(2).with_index(1) do |(item1, item2), index|
@@ -298,8 +331,9 @@ class EvalGPT
       response_block: lambda { |chunk, remaining_bytes, total_bytes|
         parsed_chunk = JSON.parse(chunk.gsub('data:', '')) rescue nil
         if parsed_chunk&.key?('choices')
-          puts parsed_chunk['choices'].first['delta']['content']
           result = "#{result}#{parsed_chunk['choices'].first['delta']['content']}"
+          clear_screen
+          puts result
         end
       }
     )
