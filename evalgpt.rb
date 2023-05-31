@@ -138,6 +138,7 @@ class EvalGPT
   end
 
   def commit_to_pull_request(_files, now)
+    name = now
     token = ENV['GH_ACCESS_TOKEN']
     client = Octokit::Client.new(access_token: token)
     user = client.user
@@ -147,20 +148,12 @@ class EvalGPT
       begin
         puts "git clone https://frontdesk:#{token}@github.com/#{repo} repo"
         `git clone https://frontdesk:#{token}@github.com/#{repo} repo`
-        # line = Terrapin::CommandLine.new("")
-        # line.run
-        name = now
-        puts `ls -GA`
-        # absolute_path = File.expand_path("repo")
-        # puts "absolute_path: #{absolute_path}"
-        # line = Terrapin::CommandLine.new("cd", absolute_path)
-        # line.run
-        puts `pwd`
+
         `cd repo`
         `git checkout -b #{name}`
-
-        `cp -r ../output/. .`
-
+        `cd ../`
+        `cp -r output/* repo/`
+        `cd repo`
         `git add .`
 
         `git commit -m "#{@messages.join(',')}"`
