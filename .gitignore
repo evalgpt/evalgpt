@@ -4,3 +4,5 @@ output/*
 .python-version
 .ruby-version
 Gemfile.lock
+repo
+output/*
