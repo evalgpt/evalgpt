@@ -1,0 +1,57 @@
+Rewrite the python program in ruby:
+class TicTacToe:
+  def __init__(self):
+    self.board = [[" " for _ in range(3)] for _ in range(3)]
+  
+  def print_board(self):
+    print("-------------")
+    for row in self.board:
+      print(" {} | {} | {} \n-------------".format(row[0], row[1], row[2]))
+  
+  def make_move(self, player, row, col):
+    if self.board[row][col] == " ":
+      self.board[row][col] = player
+      return True
+    else:
+      return False
+  
+  def check_win(self, player):
+    win_patterns = [
+      [[0,0], [0,1], [0,2]],
+      [[1,0], [1,1], [1,2]],
+      [[2,0], [2,1], [2,2]],
+      [[0,0], [1,0], [2,0]],
+      [[0,1], [1,1], [2,1]],
+      [[0,2], [1,2], [2,2]],
+      [[0,0], [1,1], [2,2]],
+      [[0,2], [1,1], [2,0]]
+    ]
+    
+    for pattern in win_patterns:
+      if all(self.board[pos[0]][pos[1]] == player for pos in pattern):
+        return True
+    
+    return False
+  
+  def game_loop(self):
+    current_player = "X"
+    while True:
+      self.print_board()
+      row, col = input(f"Player {current_player}, make your move (row, col): ").split(",")
+      row, col = int(row), int(col)
+      if self.make_move(current_player, row, col):
+        if self.check_win(current_player):
+          self.print_board()
+          print(f"Player {current_player} wins!")
+          break
+        elif all(cell != " " for row in self.board for cell in row):
+          self.print_board()
+          print("It's a tie!")
+          break
+        else:
+          current_player = "O" if current_player == "X" else "X"
+      else:
+        print("Invalid move, please try again.")
+
+game = TicTacToe()
+game.game_loop()
