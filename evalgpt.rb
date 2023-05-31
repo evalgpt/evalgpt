@@ -15,11 +15,11 @@ class EvalGPT
   SUPPORTED_LANGUAGES = %w[text ruby javascript python swift bash node]
   SUPPORTED_EXTENSIONS = %w[txt rb js py swift sh js]
 
-  def initialize(api_key, verbose, input = nil, output_folder = nil, commit_only = false)
+  def initialize(api_key, verbose, input = nil, output_folder = nil, commit = false)
     @selected_model = MODEL
     @api_key = api_key
     @verbose = verbose
-    @commit_only = commit_only
+    @commit = commit
     @headers = {
       'Content-Type' => 'application/json',
       'Authorization' => "Bearer #{@api_key}"
@@ -40,9 +40,8 @@ class EvalGPT
 
   def chat
 
-    if @commit_only
-      commit_to_pull_request(locations, Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
-      return
+    if @commit
+      commit_to_pull_request([], Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
     end
 
     if @in && @out
@@ -71,7 +70,7 @@ class EvalGPT
       puts response
       puts ''
       response = extract_code(response)
-      puts "\n\extract_code: #{response}\n\n"
+      # puts "\n\extract_code: #{response}\n\n"
       locations = []
       if response
         response.each do |k|
@@ -86,9 +85,9 @@ class EvalGPT
       else
         puts 'No code response found'
       end
-      commit_to_pull_request(locations, Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
+      commit_to_pull_request(locations, Time.now.strftime('%Y-%m-%d_%H-%M-%S')) unless !@commit
     end
-    return if @in && @out || @commit_only
+    return if @in && @out || @commit
     help
     loop do
       print 'User: '.colorize(:blue)
@@ -149,7 +148,7 @@ class EvalGPT
     repo_user =  ENV['GH_REPO'].split('/')[0].split(':')[1]
     repo_name =  ENV['GH_REPO'].split('/')[1].split('.')[0]   
     repo = "#{repo_user}/#{repo_name}"
-    `echo "Completed @#{now}\n$(cat #{@in})" > #{@in}`
+    `echo "Completed @#{now}\n$(cat #{@in})" > #{@in}` #
     output_folder = File.absolute_path("output")
     input_file = File.absolute_path(@in)
     Dir.mktmpdir do |d|
@@ -167,13 +166,12 @@ class EvalGPT
   end
 
   def write_code(code, language, filename = nil)
-    puts "write_code: language: #{language} filename: #{filename}"
+    # puts "write_code: language: #{language} filename: #{filename}"
     timestamp = Time.now.strftime('%Y-%m-%d_%H-%M-%S')
     ext = SUPPORTED_EXTENSIONS[SUPPORTED_LANGUAGES.index(language)]
     filename ||= "#{language}_#{timestamp}_#{Time.now.to_i}.#{ext}"
-    puts "ext: #{ext} filename: #{filename}"
+    # puts "ext: #{ext} filename: #{filename}"
     if @out
-
       full_path = File.join(@out, filename)
       dir = File.dirname(full_path)
       create_directory_if_not_exists(@out)
@@ -182,7 +180,7 @@ class EvalGPT
       paths.pop
       paths = paths.join('/')
       FileUtils.mkdir_p(paths) if paths && !File.directory?(paths)
-      puts ":write: #{full_path}"
+      # puts ":write: #{full_path}"
       File.open(full_path, 'w') do |file|
         file.write(code)
       end
@@ -291,19 +289,19 @@ class EvalGPT
   def extract_code(response)
     matches = response.scan(/(\*\*(.*?)\*\*)\n```.*?\n?([\s\S]*?)\n```/m)
     files = {}
-    puts "matches: #{matches}"
+    # puts "matches: #{matches}"
 
     matches.each do |match|
       files[match[1]] = match[2].strip
     end
 
-    puts "files: #{files}"
+    # puts "files: #{files}"
     files
   end
 
   def create_directory_if_not_exists(relative_path)
     absolute_path = File.expand_path(relative_path)
-    puts "absolute_path: #{absolute_path}"
+    # puts "absolute_path: #{absolute_path}"
     FileUtils.mkdir_p(absolute_path) unless File.directory?(absolute_path)
   end
 
@@ -389,8 +387,8 @@ OptionParser.new do |opts|
     options[:verbose] = v
   end
 
-  opts.on('-c', '--commit', 'commit output folder') do |h|
-    options[:commit] = h
+  opts.on('-c', '--commit', 'create a feature branch with the output folder contents') do |c|
+    options[:commit] = true
   end
 end.parse!
 
@@ -398,5 +396,6 @@ api_key = ENV['GPT_API_KEY'] || 'Your API Key here'
 verbose = options[:verbose] || false
 input = options[:input] || nil
 output = options[:output] || nil
+commit = options[:commit] || nil
 
-EvalGPT.new(api_key, verbose, input, output).chat
+EvalGPT.new(api_key, verbose, input, output, commit).chat
