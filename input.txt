@@ -1,3 +1,5 @@
+Completed @2023-05-30_22-08-27
+-e Completed @ 2023-05-30_22-05-46
 * write a python application that has a method call(message), which takes the message and sends to openai gpt completions model
 * model name and attributes like temperature etc should be environment variables
 * write a pytest that tests the application call method

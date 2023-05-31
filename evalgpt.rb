@@ -6,8 +6,6 @@ require 'tty-spinner'
 require 'terrapin'
 require 'pty'
 require 'excon'
-require 'octokit'
-require 'git'
 
 # MODEL='gpt-3.5-turbo-0301'
 MODEL = 'gpt-3.5-turbo'
@@ -17,10 +15,11 @@ class EvalGPT
   SUPPORTED_LANGUAGES = %w[text ruby javascript python swift bash node]
   SUPPORTED_EXTENSIONS = %w[txt rb js py swift sh js]
 
-  def initialize(api_key, verbose, input = nil, output_folder = nil)
+  def initialize(api_key, verbose, input = nil, output_folder = nil, commit_only = false)
     @selected_model = MODEL
     @api_key = api_key
     @verbose = verbose
+    @commit_only = commit_only
     @headers = {
       'Content-Type' => 'application/json',
       'Authorization' => "Bearer #{@api_key}"
@@ -40,6 +39,12 @@ class EvalGPT
   end
 
   def chat
+
+    if @commit_only
+      commit_to_pull_request(locations, Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
+      return
+    end
+
     if @in && @out
       input = ''
       puts "\[prommpt] ".colorize(:green) + @in.colorize(:red) + ":\n"
@@ -83,6 +88,7 @@ class EvalGPT
       end
       commit_to_pull_request(locations, Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
     end
+    return if @in && @out || @commit_only
     help
     loop do
       print 'User: '.colorize(:blue)
@@ -140,29 +146,24 @@ class EvalGPT
   def commit_to_pull_request(_files, now)
     name = now
     token = ENV['GH_ACCESS_TOKEN']
-    client = Octokit::Client.new(access_token: token)
-    user = client.user
-    user.login
-    repo = 'frontdesk/output'
-
-      begin
-        puts "git clone https://frontdesk:#{token}@github.com/#{repo} repo"
-        `git clone https://frontdesk:#{token}@github.com/#{repo} repo`
-
-        `cd repo`
+    repo_user =  ENV['GH_REPO'].split('/')[0].split(':')[1]
+    repo_name =  ENV['GH_REPO'].split('/')[1].split('.')[0]   
+    repo = "#{repo_user}/#{repo_name}"
+    `echo "Completed @#{now}\n$(cat #{@in})" > #{@in}`
+    output_folder = File.absolute_path("output")
+    input_file = File.absolute_path(@in)
+    Dir.mktmpdir do |d|
+      Dir.chdir d do
+        `git clone https://#{repo_user}:#{token}@github.com/#{repo} repo`
+        Dir.chdir 'repo' do
         `git checkout -b #{name}`
-        `cd ../`
-        `cp -r output/* repo/`
-        `cd repo`
+        `cp -r #{output_folder}/* .`
         `git add .`
-
-        `git commit -m "#{@messages.join(',')}"`
-
+        `git commit --file "#{input_file}"`
         `git push origin #{name}`
-      rescue Octokit::Error => e
-        puts "An error occurred while creating the pull request: #{e.message}"
+        end
       end
-
+    end
   end
 
   def write_code(code, language, filename = nil)
@@ -386,6 +387,10 @@ OptionParser.new do |opts|
   end
   opts.on('-v', '--verbose', 'Run in verbose mode') do |v|
     options[:verbose] = v
+  end
+
+  opts.on('-c', '--commit', 'commit output folder') do |h|
+    options[:commit] = h
   end
 end.parse!
 
